@@ -39,10 +39,17 @@ import java.util.List;
 public class Borders_main extends Application {
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Borders");
-        Parameters params = getParameters();
-        List<String> args = params.getRaw(); // Получаем параметр командной строки, который отвечает за размер поля
-        int grid_size = Integer.parseInt(args.get(0).toString()) * 2 + 1; // Количество колонн и рядов игровой сетки
+        int grid_size = 0;
+        TextInputDialog grid = new TextInputDialog();
+        grid.setTitle("Первичная настройка");
+        grid.setHeaderText("Введите размер сетки(n)");
+         // Получаем параметр командной строки, который отвечает за размер поля
+        try {
+            grid.showAndWait();
+            grid_size = Integer.parseInt(grid.getEditor().getText()) * 2 + 1;// Количество колонн и рядов игровой сетки
+        }
+        catch(NumberFormatException e) { }
+        primaryStage.setTitle("Borders: Red player's turn");
         ToggleButton[][] vhl = new ToggleButton[grid_size][grid_size]; // Линии
         Label[][] mark = new Label[grid_size][grid_size]; // Лейблы в  которых будут записаны Х, как факт захвата клетки
         GridPane game_grid = new GridPane();
@@ -99,10 +106,8 @@ public class Borders_main extends Application {
                             boolean switch_color = true;
                             if (!vhl[ver][hor].isSelected()) {
                                 vhl[ver][hor].setSelected(true);
-                                System.out.println("Ne hod");
                             } else {
                                 vhl[ver][hor].setSelected(true);
-                                System.out.println("Hod");
                                 //Head
                                 if (vhl[ver - 1][hor - 1].isSelected()
                                         && vhl[ver][hor - 2].isSelected()
@@ -122,9 +127,13 @@ public class Borders_main extends Application {
                             }
                             if(switch_color) {
                                 if(scene.getFill() == Color.RED){
+
+                                    primaryStage.setTitle("Borders: Blue player's turn");
                                     scene.setFill(Color.BLUE);
                                 }
                                 else{
+
+                                    primaryStage.setTitle("Borders: Red player's turn");
                                     scene.setFill(Color.RED);
                                 }
                             }
@@ -140,10 +149,8 @@ public class Borders_main extends Application {
                             boolean switch_color = true;
                             if (!vhl[ver][hor].isSelected()) {
                                 vhl[ver][hor].setSelected(true);
-                                System.out.println("Ne hod");
                             } else {
                                 vhl[ver][hor].setSelected(true);
-                                System.out.println("Hod");
                                 //Left-wing
                                 if (vhl[ver - 2][hor].isSelected()
                                         && vhl[ver - 1][hor - 1].isSelected()
@@ -164,8 +171,10 @@ public class Borders_main extends Application {
                             if(switch_color) {
                                 if (scene.getFill() == Color.RED) {
                                     scene.setFill(Color.BLUE);
+                                    primaryStage.setTitle("Borders: Blue player's turn");
                                 } else {
                                     scene.setFill(Color.RED);
+                                    primaryStage.setTitle("Borders: Red player's turn");
                                 }
                             }
                         }

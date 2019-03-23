@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="borders:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/borders_jar</output-path>
+    <root id="archive" name="borders.jar">
+      <element id="module-output" name="borders" />
+    </root>
+  </artifact>
+</component>
