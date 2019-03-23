@@ -1,0 +1,31 @@
+.vl {
+    -fx-max-width: 5;
+    -fx-pref-width: 5;
+    -fx-min-width: 5;
+    -fx-max-height: 30;
+    -fx-pref-height: 30;
+    -fx-min-height: 30;
+    -fx-alignment: center-right;
+    -fx-background-color: grey;
+}
+.hl {
+    -fx-max-height: 5;
+    -fx-pref-height: 5;
+    -fx-min-height: 5;
+    -fx-max-width: 30;
+    -fx-pref-width: 30;
+    -fx-min-width: 30;
+    -fx-alignment: center;
+    -fx-background-color: grey;
+}
+.hl:selected{
+    -fx-background-color: black;
+}
+.vl:selected{
+    -fx-background-color: black;
+}
+.mark {
+    -fx-alignment: center-right;
+    -fx-text-alignment: center;
+    -fx-font-size: 20;
+}
