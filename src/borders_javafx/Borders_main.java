@@ -23,6 +23,8 @@
 package borders_javafx;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -30,6 +32,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.List;
 
@@ -40,10 +43,10 @@ public class Borders_main extends Application {
         Parameters params = getParameters();
         List<String> args = params.getRaw(); // Получаем параметр командной строки, который отвечает за размер поля
         int grid_size = Integer.parseInt(args.get(0).toString()) * 2 + 1; // Количество колонн и рядов игровой сетки
-        ToggleButton[][] vl = new ToggleButton[grid_size][grid_size]; // Вертикальные линии
-        ToggleButton[][] hl = new ToggleButton[grid_size][grid_size]; // Горизонтальные линии
+        ToggleButton[][] vhl = new ToggleButton[grid_size][grid_size]; // Линии
         Label[][] mark = new Label[grid_size][grid_size]; // Лейблы в  которых будут записаны Х, как факт захвата клетки
         GridPane game_grid = new GridPane();
+        Scene scene = new Scene(game_grid, 18*grid_size, 18*grid_size, Color.RED);
         game_grid.setAlignment(Pos.CENTER);
         for(int i = 0; i < grid_size; i++){ // Цикл создающий игровую сетку
             if((i % 2) == 0){
@@ -55,23 +58,23 @@ public class Borders_main extends Application {
                 game_grid.getRowConstraints().add(new RowConstraints(30));
             }
         }
-        //game_grid.setGridLinesVisible(true);
         for(int v = 0; v < grid_size; v++){ // Цикл заполняющий ячейки в сетке
             for(int h = 0; h < grid_size; h++){
                 if((v % 2) == 0 && (h % 2) != 0){ // Вертикальные линии
-                    vl[v][h] = new ToggleButton();
-                    vl[v][h].getStyleClass().add("vl");
-                    game_grid.add(vl[v][h], v, h);
+                    vhl[v][h] = new ToggleButton();
+                    vhl[v][h].getStyleClass().add("vl");
+                    game_grid.add(vhl[v][h], v, h);
                     if(v == 0 || v == grid_size-1){ // Крайние линии по дефолту уже закрашены
-                        vl[v][h].setSelected(true);
+                        vhl[v][h].setSelected(true);
                     }
+
                 }
                 else if((v % 2) != 0 && (h % 2) == 0){ // Горизонтальные линии
-                    hl[v][h] = new ToggleButton();
-                    hl[v][h].getStyleClass().add("hl");
-                    game_grid.add(hl[v][h], v, h);
+                    vhl[v][h] = new ToggleButton();
+                    vhl[v][h].getStyleClass().add("hl");
+                    game_grid.add(vhl[v][h], v, h);
                     if(h == 0 || h == grid_size-1){ // Крайние линии по дефолту уже закрашены
-                        hl[v][h].setSelected(true);
+                        vhl[v][h].setSelected(true);
                     }
                 }
                 else if((v % 2) != 0 && (h % 2) != 0 ){ // Лейблы, в которые кладутся Х
@@ -83,8 +86,94 @@ public class Borders_main extends Application {
                 }
 
             }
+
         }
-        Scene scene = new Scene(game_grid, 600, 600);
+        for(int v = 0; v < grid_size; v++) { // Цикл заполняющий ячейки в сетке
+            for (int h = 0; h < grid_size; h++) {
+                if((v % 2) != 0 && (h % 2) == 0) {
+                    final int ver = v;
+                    final int hor = h;
+                    vhl[v][h].setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            boolean switch_color = true;
+                            if (!vhl[ver][hor].isSelected()) {
+                                vhl[ver][hor].setSelected(true);
+                                System.out.println("Ne hod");
+                            } else {
+                                vhl[ver][hor].setSelected(true);
+                                System.out.println("Hod");
+                                //Head
+                                if (vhl[ver - 1][hor - 1].isSelected()
+                                        && vhl[ver][hor - 2].isSelected()
+                                        && vhl[ver + 1][hor - 1].isSelected()) {
+                                    mark[ver][hor - 1].setVisible(true);
+                                    mark[ver][hor - 1].setTextFill(scene.getFill());
+                                    switch_color = false;
+                                }
+                                //Tail
+                                if (vhl[ver - 1][hor + 1].isSelected()
+                                        && vhl[ver][hor + 2].isSelected()
+                                        && vhl[ver + 1][hor + 1].isSelected()) {
+                                    mark[ver][hor + 1].setVisible(true);
+                                    mark[ver][hor + 1].setTextFill(scene.getFill());
+                                    switch_color = false;
+                                }
+                            }
+                            if(switch_color) {
+                                if(scene.getFill() == Color.RED){
+                                    scene.setFill(Color.BLUE);
+                                }
+                                else{
+                                    scene.setFill(Color.RED);
+                                }
+                            }
+                        }
+                    });
+                }
+                else if((v % 2) == 0 && (h % 2) != 0) {
+                    final int ver = v;
+                    final int hor = h;
+                    vhl[v][h].setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            boolean switch_color = true;
+                            if (!vhl[ver][hor].isSelected()) {
+                                vhl[ver][hor].setSelected(true);
+                                System.out.println("Ne hod");
+                            } else {
+                                vhl[ver][hor].setSelected(true);
+                                System.out.println("Hod");
+                                //Left-wing
+                                if (vhl[ver - 2][hor].isSelected()
+                                        && vhl[ver - 1][hor - 1].isSelected()
+                                        && vhl[ver - 1][hor + 1].isSelected()) {
+                                    mark[ver - 1][hor].setVisible(true);
+                                    mark[ver - 1][hor].setTextFill(scene.getFill());
+                                    switch_color = false;
+                                }
+                                //Right-wing
+                                if (vhl[ver + 2][hor].isSelected()
+                                        && vhl[ver + 1][hor - 1].isSelected()
+                                        && vhl[ver + 1][hor + 1].isSelected()) {
+                                    mark[ver + 1][hor].setVisible(true);
+                                    mark[ver + 1][hor].setTextFill(scene.getFill());
+                                    switch_color = false;
+                                }
+                            }
+                            if(switch_color) {
+                                if (scene.getFill() == Color.RED) {
+                                    scene.setFill(Color.BLUE);
+                                } else {
+                                    scene.setFill(Color.RED);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
         scene.getStylesheets().add(getClass().getResource("borders.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -29,3 +29,7 @@
     -fx-text-alignment: center;
     -fx-font-size: 20;
 }
+.players {
+    -fx-alignment: center-left;
+    -fx-text-alignment: center-left;
+}
